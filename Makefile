@@ -272,9 +272,13 @@ artifacts-archive-tag:
 	$Q mkdir -p $(RELEASE)
 	$Q git archive v$(VERSION) | gzip > $(RELEASE)/step-certificates_$(VERSION).tar.gz
 
-artifacts-tag: artifacts-linux-tag artifacts-darwin-tag artifacts-archive-tag
+artifacts-tag: artifacts-linux-tag artifacts-darwin-tag artifacts-archive-tag shasum
 
-.PHONY: artifacts-linux-tag artifacts-darwin-tag artifacts-archive-tag artifacts-tag
+shasum:
+	@ sha256sum $(RELEASE)/* | sed -e ~s~$(RELEASE)/~~ > $(RELEASE)/SHASUM.txt
+	@ echo "Created sha256sum in $(RELEASE)/SHASUM.txt"
+
+.PHONY: artifacts-linux-tag artifacts-darwin-tag artifacts-archive-tag artifacts-tag shasum
 
 #################################################
 # Targets for creating step artifacts
